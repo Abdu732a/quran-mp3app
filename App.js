@@ -49,7 +49,7 @@ export default function App() {
   const sound = useRef(new Audio.Sound());
   const [currentIndex, setCurrentIndex] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [repeatMode, setRepeatMode] = useState(0); 
   const [position, setPosition] = useState(0);
@@ -151,7 +151,7 @@ export default function App() {
 
   const handleSurahPress = useCallback((index) => {
     loadAndPlay(index);
-    setModalVisible(true);
+    setIsPlayerOpen(true);
   }, []);
 
   return (
@@ -187,8 +187,8 @@ export default function App() {
           )}
         />
 
-        {currentIndex !== null && !isModalVisible && (
-          <TouchableOpacity style={styles.miniPlayer} onPress={() => setModalVisible(true)}>
+        {currentIndex !== null && !isPlayerOpen && (
+          <TouchableOpacity style={styles.miniPlayer} onPress={() => setIsPlayerOpen(true)}>
             <Image source={require('./assets/reciter.jpg')} style={styles.miniArt} />
             <Text style={styles.miniText}>{surahList[currentIndex].title}</Text>
             <TouchableOpacity onPress={togglePlayback} style={{ padding: 10 }}>
@@ -197,10 +197,15 @@ export default function App() {
           </TouchableOpacity>
         )}
 
-        <Modal visible={isModalVisible} animationType="slide">
+        <Modal 
+          visible={isPlayerOpen} 
+          animationType="slide"
+          transparent={false}
+          onRequestClose={() => setIsPlayerOpen(false)}
+        >
           <SafeAreaView style={styles.fullPlayer}>
             <View style={styles.modalHeader}>
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <TouchableOpacity onPress={() => setIsPlayerOpen(false)}>
                 <Ionicons name="chevron-down" size={36} color="white" />
               </TouchableOpacity>
               <Text style={styles.nowPlayingLabel}>NOW PLAYING</Text>
